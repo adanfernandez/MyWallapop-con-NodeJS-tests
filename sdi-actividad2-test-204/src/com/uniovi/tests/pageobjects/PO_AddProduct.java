@@ -8,20 +8,20 @@ public class PO_AddProduct {
 
 	public static void fillForm(WebDriver driver, String titlep, String descriptionp, String pricep) {
 
-		WebElement title = driver.findElement(By.name("title"));
+		WebElement title = driver.findElement(By.name("nombre"));
 		title.click();
 		title.clear();
 		title.sendKeys(titlep);
-		WebElement description = driver.findElement(By.name("description"));
+		WebElement description = driver.findElement(By.name("descripcion"));
 		description.click();
 		description.clear();
 		description.sendKeys(descriptionp);
-		WebElement price = driver.findElement(By.name("price"));
+		WebElement price = driver.findElement(By.name("precio"));
 		price.click();
 		price.clear();
 		price.sendKeys(pricep);
 		//Pulsar el boton de login.
-		By boton = By.id("addProducts");
+		By boton = By.name("añadir");
 		driver.findElement(boton).click();
 		
 	}

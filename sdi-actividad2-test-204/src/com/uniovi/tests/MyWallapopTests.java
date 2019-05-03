@@ -172,4 +172,103 @@ public class MyWallapopTests {
 	
 	
 	
+	//ADMINISTRADOR: LISTADO
+	
+	// PR10. Mostrar el listado de usuarios y comprobar que se muestran todos los que existen en el sistema
+	@Test
+	public void PR10() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 4);
+	}
+	
+	
+	//ADMINISTRADOR: ELIMINACIÓN DE USUARIOS
+	
+	// PR11.  Ir a la lista de usuarios, borrar el primer usuario de la lista, comprobar que la lista se actualiza y dicho usuario desaparece.
+	@Test
+	public void PR11() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		List<WebElement> elementos = driver.findElements(By.name("usuarios"));
+		elementos.get(0).click();
+		PO_ListView.clickOption(driver, "buttonDelete", "@id", "buttonDelete");
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 3);
+	}
+	
+	// PR12.   Ir a la lista de usuarios, borrar el último usuario de la lista, comprobar que la lista se actualiza y dicho usuario desaparece.
+	@Test
+	public void PR12() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		List<WebElement> elementos = driver.findElements(By.name("usuarios"));
+		elementos.get(3).click();
+		PO_ListView.clickOption(driver, "buttonDelete", "@id", "buttonDelete");
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 3);
+	}
+	
+	
+	// PR13.    Ir a la lista de usuarios, borrar el último usuario de la lista, comprobar que la lista se actualiza y dicho usuario desaparece.
+	@Test
+	public void PR13() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
+		List<WebElement> elementos = driver.findElements(By.name("usuarios"));
+		elementos.get(0).click();
+		elementos.get(1).click();
+		elementos.get(2).click();
+		PO_ListView.clickOption(driver, "buttonDelete", "@id", "buttonDelete");
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 1);
+	}
+	
+	
+	
+	// DAR DE ALTA UNA OFERTA
+	
+	// PR14.	Ir al formulario de alta de oferta, rellenarla con datos válidos y pulsar el botón Submit. 
+	//				Comprobar que la oferta sale en el listado de ofertas de dicho usuario
+	@Test
+	public void PR14() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.clickOption(driver, "/productos/agregar", "class", "btn btn-primary");
+		PO_AddProduct.fillForm(driver, "Lámpara", "Flexo de estudio excelente para esas interminables noches haciendo SDI!", "15.00");
+		PO_HomeView.checkElement(driver, "text", "Lámpara");
+	}
+	
+	// PR15.	Ir al formulario de alta de oferta, rellenarla con datos inválidos (campo título vacío) y pulsar
+	//			el botón Submit. Comprobar que se muestra el mensaje de campo obligatorio
+	@Test
+	public void PR15() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.clickOption(driver, "/productos/agregar", "class", "btn btn-primary");
+		PO_AddProduct.fillForm(driver, "", "Flexo de estudio excelente para esas interminables noches haciendo SDI!", "15.00");
+		PO_HomeView.checkElement(driver, "text", "Inserte los campos obligatorios");
+	}
+	
+	
+	
+	
+	// OFERTAS PROPIAS
+	// PR16.	 Mostrar el listado de ofertas para dicho usuario y comprobar que se muestran todas los que existen para este usuario. 
+	@Test
+	public void PR16() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.clickOption(driver, "/publicaciones", "class", "btn btn-info");
+		PO_HomeView.checkElement(driver, "text", "ladron");
+		PO_HomeView.checkElement(driver, "text", "gafas de sol");
+	}
 }
