@@ -9,7 +9,7 @@ public class PO_SearchProducts {
 	public static void fillForm(WebDriver driver, String searchp) {
 
 
-		WebElement search = driver.findElement(By.name("searchText"));
+		WebElement search = driver.findElement(By.name("busqueda"));
 		search.click();
 		search.clear();
 		search.sendKeys(searchp);

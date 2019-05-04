@@ -269,6 +269,142 @@ public class MyWallapopTests {
 		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
 		PO_HomeView.clickOption(driver, "/publicaciones", "class", "btn btn-info");
 		PO_HomeView.checkElement(driver, "text", "ladron");
-		PO_HomeView.checkElement(driver, "text", "gafas de sol");
+		PO_HomeView.checkElement(driver, "text", "gafas");
+	}
+	
+	
+	
+	
+	//DAR DE BAJA UNA OFERTA
+	
+	// PR17.	 Ir a la lista de ofertas, borrar la primera oferta de la lista, comprobar que la lista se actualiza y que la oferta desaparece. 
+	@Test
+	public void PR17() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");		
+		PO_HomeView.clickOption(driver, "/publicaciones", "class", "btn btn-info");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 2);
+		PO_ListView.clickOption(driver, "eliminar/ladron", "@id", "eliminar/gafas");
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 1);
+	}
+	
+	// PR18.	  Ir a la lista de ofertas, borrar la última oferta de la lista, comprobar que la lista se actualiza y que la oferta desaparece 
+	@Test
+	public void PR18() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");		
+		PO_HomeView.clickOption(driver, "/publicaciones", "class", "btn btn-info");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 2);
+		PO_ListView.clickOption(driver, "eliminar/gafas", "@id", "eliminar/ladron");
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 1);
+	}
+	
+	
+	
+	
+	
+	// BUSCAR OFERTAS
+	
+	// PR19.	Hacer una búsqueda con el campo vacío y comprobar que se muestra la página que corresponde con el listado de las ofertas existentes en el sistema
+	@Test
+	public void PR19() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");		
+		PO_SearchProducts.fillForm(driver, "");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//hr", PO_View.getTimeout());
+		assertEquals(6, elementos.size()); //Hay un hr por cada producto, y uno al final. Si hay 5 productos, habrá 6 hr.
+		elementos = PO_View.checkElement(driver, "free", "//a[contains(@class, 'page-link')]");
+		elementos.get(1).click();
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//hr", PO_View.getTimeout());
+		assertEquals(4, elementos.size());
+	}
+	
+	// PR20.	Hacer una búsqueda escribiendo en el campo un texto que no exista y comprobar que se muestra la página que corresponde, con la lista de ofertas vacía.
+	@Test
+	public void PR20() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");		
+		PO_SearchProducts.fillForm(driver, "cocodrilo escocés");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//hr", PO_View.getTimeout());
+		assertEquals(1, elementos.size()); //Hay un hr por cada producto, y uno al final. Si hay 0 productos, habrá un hr.
+	}
+	
+	
+	// PR21.	Hacer una búsqueda escribiendo en el campo un texto en minúscula o mayúscula y comprobar que se muestra la página que corresponde, 
+	//				con la lista de ofertas que contengan dicho texto,
+	//				independientemente que el título esté almacenado en minúsculas o mayúscula
+	@Test
+	public void PR21() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");		
+		PO_SearchProducts.fillForm(driver, "LaMpArA");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//hr", PO_View.getTimeout());
+		assertEquals(2, elementos.size()); //Hay un hr por cada producto, y uno al final. Si hay un producto, habrá 2 hr.
+	}
+	
+	
+	
+	
+	// COMPRAR OFERTA
+	
+	// PR22.	Sobre una búsqueda determinada (a elección de desarrollador), comprar una oferta que deja un saldo positivo en el contador del comprobador. 
+	//				Y comprobar que el contador se actualiza correctamente en la vista del comprador.
+	@Test
+	public void PR22() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.checkElement(driver, "text", "Dinero disponible: 100 €");
+		PO_ListView.clickOption(driver, "comprar/lampara", "@id", "desconectarse");
+		PO_HomeView.checkElement(driver, "text", "Dinero disponible: 88 €");
+	}
+	
+	// PR23.	Sobre una búsqueda determinada (a elección de desarrollador), comprar una oferta que deja un saldo 0 en el contador del comprobador. 
+	//				Y comprobar que el contador se actualiza correctamente en la vista del comprador.
+	@Test
+	public void PR23() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.checkElement(driver, "text", "Dinero disponible: 100 €");
+		PO_ListView.clickOption(driver, "comprar/ordenador", "@id", "desconectarse");
+		PO_HomeView.checkElement(driver, "text", "Dinero disponible: 0 €");
+	}
+	
+	// PR24.	Sobre una búsqueda determinada (a elección de desarrollador), intentar comprar una oferta que esté por encima de saldo disponible del comprador. 
+	//				Y comprobar que se muestra el mensaje de saldo no suficiente
+	@Test
+	public void PR24() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.checkElement(driver, "text", "Dinero disponible: 100 €");
+		PO_ListView.clickOption(driver, "comprar/nokia", "@id", "comprar/nokia");
+		PO_HomeView.checkElement(driver, "text", "Dinero disponible: 100 €");
+		PO_HomeView.checkElement(driver, "text", "No posee suficiente dinero");
+	}
+	
+	
+	
+	// VER EL LISTADODE OFERTAS COMPRADAS
+	// PR25.	Ir a la opción de ofertas compradas del usuario y mostrar la lista. Comprobar que aparecen las ofertas que deben aparecer
+	@Test
+	public void PR25() {
+		driver.navigate().to(URL + "/testing");
+		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.checkElement(driver, "text", "Dinero disponible: 100 €");
+		PO_ListView.clickOption(driver, "comprar/lampara", "@id", "desconectarse");
+		//Ya en las compras comprobamos que está la recién comprada
+		PO_HomeView.checkElement(driver, "text", "lampara");
 	}
 }
