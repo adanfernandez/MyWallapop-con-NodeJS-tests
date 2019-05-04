@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -407,4 +409,118 @@ public class MyWallapopTests {
 		//Ya en las compras comprobamos que está la recién comprada
 		PO_HomeView.checkElement(driver, "text", "lampara");
 	}
+	
+	
+	
+	
+	// AUTENTIFICACIÓN DE USUARIO
+	
+	// PR29.	Inicio de sesión con datos válidos.
+	@Test
+	public void PR29()
+	{
+		driver.navigate().to(URL + "/testing");
+		driver.navigate().to(URL + "/cliente.html");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		PO_HomeView.checkElement(driver, "text", "Nombre");
+		PO_HomeView.checkElement(driver, "text", "Descripción");
+		PO_HomeView.checkElement(driver, "text", "Precio");
+		PO_HomeView.checkElement(driver, "text", "Propietario");
+	}
+	
+	// PR30.	 Inicio de sesión con datos inválidos (email existente, pero contraseña incorrecta).
+	@Test
+	public void PR30()
+	{
+		driver.navigate().to(URL + "/testing");
+		driver.navigate().to(URL + "/cliente.html");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "654321");
+		PO_HomeView.checkElement(driver, "text", "Introduzca los campos correctamente");
+	}
+	
+	// PR31.	Inicio de sesión con datos válidos (campo email o contraseña vacíos).
+	@Test
+	public void PR31()
+	{
+		driver.navigate().to(URL + "/testing");
+		driver.navigate().to(URL + "/cliente.html");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "");
+		PO_HomeView.checkElement(driver, "text", "Introduzca los campos correctamente");
+	}
+	
+	
+	
+	// MOSTRADO DE OFERTAS DISPONIBLES
+	
+	// PR32.	Mostrar el listado de ofertas disponibles y comprobar que se muestran todas las que existen, menos las del usuario identificado.
+	@Test
+	public void PR32()
+	{
+		driver.navigate().to(URL + "/testing");
+		driver.navigate().to(URL + "/cliente.html");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		//Comprobamos que no están las ofertas de Adalino
+		PO_HomeView.checkNoElement(driver, "ladron");
+		PO_HomeView.checkNoElement(driver, "gafas");
+		//Comprobamos que están el resto
+		PO_HomeView.checkElement(driver, "text", "nokia");
+		PO_HomeView.checkElement(driver, "text", "lampara");
+		PO_HomeView.checkElement(driver, "text", "llavero");
+		//Comprobamos que no se muestran los productos ya vendidos
+		PO_HomeView.checkNoElement(driver, "radio");
+		PO_HomeView.checkNoElement(driver, "gafas");
+		PO_HomeView.checkNoElement(driver, "balon");
+
+	}
+	
+	
+	
+	// ENVÍO Y VISUALIZACIÓN DE MENSAJES
+	
+	// PR33.	Sobre una búsqueda determinada de ofertas (a elección de desarrollador), enviar un mensaje a
+	//				una oferta concreta. Se abriría dicha conversación por primera vez. Comprobar que el mensaje aparece
+	//				en el listado de mensajes.
+	@Test
+	public void PR33()
+	{
+		driver.navigate().to(URL + "/testing");
+		driver.navigate().to(URL + "/cliente.html");
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "text", "Chat", PO_View.getTimeout());
+		elementos.get(2).click();
+		WebElement elemento = driver.findElement(By.name("mensaje"));
+		elemento.click();
+		elemento.clear();
+		elemento.sendKeys("Hola, estoy interesado en su producto");
+		driver.findElement(By.className("btn")).click();
+		PO_HomeView.checkElement(driver, "text", "Hola, estoy interesado en su producto");
+	}
+		
+	// PR34.	Sobre el listado de conversaciones enviar un mensaje a una conversación ya abierta.
+	//				Comprobar que el mensaje aparece en el listado de mensajes.
+	@Test
+	public void PR34()
+	{
+		driver.navigate().to(URL + "/testing");
+		driver.navigate().to(URL + "/cliente.html");
+		
+		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "text", "Chat", PO_View.getTimeout());
+		elementos.get(3).click();
+		PO_HomeView.checkElement(driver, "text", "Hola. Estoy interesado");
+		WebElement elemento = driver.findElement(By.name("mensaje"));
+		elemento.click();
+		elemento.clear();
+		elemento.sendKeys("¿Podría darme más información acerca del producto?");
+		driver.findElement(By.className("btn")).click();
+		PO_HomeView.checkElement(driver, "text", "¿Podría darme más información acerca del producto?");
+		elemento = driver.findElement(By.name("mensaje"));
+		elemento.click();
+		elemento.clear();
+		elemento.sendKeys("Espero la respuesta");
+		driver.findElement(By.className("btn")).click();
+		PO_HomeView.checkElement(driver, "text", "Espero la respuesta");
+	}
+	
+	
 }
