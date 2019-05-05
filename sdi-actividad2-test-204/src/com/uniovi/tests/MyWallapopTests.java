@@ -111,6 +111,7 @@ public class MyWallapopTests {
 		driver.navigate().to(URL + "/testing");
 		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
 		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
+		// Vemos que accede a su vista 
 		PO_View.checkElement(driver, "text", "Productos");
 	}
 		
@@ -130,7 +131,6 @@ public class MyWallapopTests {
 		driver.navigate().to(URL + "/testing");
 		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
 		PO_LoginView.fillForm(driver, "adalino@adalino", "");
-		//Al ser un campo required, no pasará nada.
 		PO_View.checkElement(driver, "text", "No puede haber campos vacíos");
 	}
 
@@ -156,6 +156,7 @@ public class MyWallapopTests {
 		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
 		PO_View.checkElement(driver, "text", "Productos");
 		PO_HomeView.clickOption(driver, "desconectarse", "id", "identificarse");
+		// Volvemos a la página de inicio de sesión
 		PO_View.checkElement(driver, "text", "Identificación de usuario");
 	}
 	
@@ -183,6 +184,7 @@ public class MyWallapopTests {
 		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
 		PO_LoginView.fillForm(driver, "admin@email.com", "admin");
 		List<WebElement> elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		// 4 usuarios
 		assertTrue(elementos.size() == 4);
 	}
 	
@@ -199,6 +201,7 @@ public class MyWallapopTests {
 		elementos.get(0).click();
 		PO_ListView.clickOption(driver, "buttonDelete", "@id", "buttonDelete");
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		// Eliminamos un usuario. Quedan 3
 		assertTrue(elementos.size() == 3);
 	}
 	
@@ -212,6 +215,7 @@ public class MyWallapopTests {
 		elementos.get(3).click();
 		PO_ListView.clickOption(driver, "buttonDelete", "@id", "buttonDelete");
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		// Eliminamos un usuario. Quedan 3
 		assertTrue(elementos.size() == 3);
 	}
 	
@@ -228,6 +232,7 @@ public class MyWallapopTests {
 		elementos.get(2).click();
 		PO_ListView.clickOption(driver, "buttonDelete", "@id", "buttonDelete");
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		// Eliminamos 3 usuarios. Queda 1
 		assertTrue(elementos.size() == 1);
 	}
 	
@@ -244,6 +249,7 @@ public class MyWallapopTests {
 		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
 		PO_HomeView.clickOption(driver, "/productos/agregar", "class", "btn btn-primary");
 		PO_AddProduct.fillForm(driver, "Lámpara", "Flexo de estudio excelente para esas interminables noches haciendo SDI!", "15.00");
+		// Nos redirecciona a nuestras compras. Está alli
 		PO_HomeView.checkElement(driver, "text", "Lámpara");
 	}
 	
@@ -270,6 +276,7 @@ public class MyWallapopTests {
 		PO_HomeView.clickOption(driver, "identificarse", "id", "identificacion");
 		PO_LoginView.fillForm(driver, "adalino@adalino", "123456");
 		PO_HomeView.clickOption(driver, "/publicaciones", "class", "btn btn-info");
+		// En la BBDD inicial tiene definidas un ladrón y unas gafas
 		PO_HomeView.checkElement(driver, "text", "ladron");
 		PO_HomeView.checkElement(driver, "text", "gafas");
 	}
